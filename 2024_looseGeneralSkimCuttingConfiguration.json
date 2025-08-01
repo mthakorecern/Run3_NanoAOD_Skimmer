@@ -1,0 +1,10 @@
+{
+    "FatJet Requirement":"nFatJet > 0",
+    "PuppiMET_pt Threshold":"PuppiMET_pt > 50",
+    "MET Filters":"Flag_goodVertices && Flag_globalSuperTightHalo2016Filter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_BadPFMuonFilter && Flag_BadPFMuonDzFilter && Flag_hfNoisyHitsFilter && Flag_eeBadScFilter && Flag_ecalBadCalibFilter",
+    "Good Primary Vertices":"PV_npvsGood > 0",
+    "Tau requirement": "(nboostedTau > 0) || (nTau > 0)"
+
+}
+
+
