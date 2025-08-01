@@ -6,7 +6,7 @@ A tool to skim CMS Run‑3 NanoAOD files—filtering events based on physics sel
 ---
 
 ## Installation and Setup
-`source /cvmfs/cms.cern.ch/cmsset_default.sh
+```source /cvmfs/cms.cern.ch/cmsset_default.sh
 cmsrel CMSSW_15_0_2
 cd CMSSW_15_0_2/src/
 cmsenv
@@ -14,7 +14,7 @@ cmsenv
 git clone https://github.com/mthakorecern/Run3_NanoAOD_Skimmer.git
 
 cd Run3_NanoAOD_Skimmer
-voms-proxy-init -voms cms -out /tmp/x509up_u10196 -valid 192:00`
+voms-proxy-init -voms cms -out /tmp/x509up_u10196 -valid 192:00```
 
 Now to run skimming jobs for  a particular datset:
 
