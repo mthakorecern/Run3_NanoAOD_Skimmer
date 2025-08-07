@@ -47,10 +47,10 @@ class skimManager():
                 theRunTree = theLoadFile.Runs
             except: #we have failed again to find the file. Let's try to open it this way
                 hdfsFileName = ''
-                if 'xrootd' in fileName: #we're already tried toopen xrootd style. We're done here
-                    hdfsFileName = fileName.replace('hdfs/','')
+                if 'cms-xrd-global' in fileName: #we're already tried toopen xrootd style. We're done here
+                    hdfsFileName = fileName.replace('root://cms-xrd-global.cern.ch//','root://cmsxcache.hep.wisc.edu//')
                 else:
-                    hdfsFileName = fileName.replace('/hdfs','root://cmsxrootd.hep.wisc.edu//')
+                    hdfsFileName = fileName.replace('root://cmsxcache.hep.wisc.edu//','root://cms-xrd-global.cern.ch//')
                     print(hdfsFileName)
                 print(hdfsFileName)
                 print("Last attempt to load the file at /hdfs/ with: "+hdfsFileName)
