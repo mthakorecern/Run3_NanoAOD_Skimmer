@@ -43,10 +43,13 @@ def main(args):
     print(f'Selected dataset: {args.datasetKey}')
     print(f'Short name: {short_name}')
     print(f'Number of files: {len(listOfFiles)}')
+    #job_name_int= args.datasetKey
+    job_name_int = args.datasetKey.strip('/').removesuffix('NANOAODSIM').rstrip('/').replace('/', '_')
+    print(f"intermediate job-name is {job_name_int}")
 
     if args.prepareCondorSubmission:
         timestamp = datetime.datetime.now().strftime('%d%b%y_%H%M')
-        job_name = f"{short_name}_{timestamp}_{job_index_str}" + ('' if args.skimSuffix == '' else f"_{args.skimSuffix}")
+        job_name = f"{job_name_int}_{timestamp}_{job_index_str}" + ('' if args.skimSuffix == '' else f"_{args.skimSuffix}")
         overallSubmitDir = os.path.join(args.submitDirPath, job_name)
         dagLocation = os.path.join(overallSubmitDir, 'dags')
         os.makedirs(os.path.join(dagLocation, 'daginputs'), exist_ok=True)
@@ -71,7 +74,7 @@ def main(args):
             f'--output-dag-file={dagLocation}/dag',
             f'--output-dir={args.destination}/{job_name}',
             '--opsys=rhel9',
-            '--memory-requirements=10000',
+            '--memory-requirements=5000',
             '--disk-requirements=10000',
             '--input-dir=/',
             '--extra-inputs=' + ','.join(filter(None, [
@@ -101,7 +104,7 @@ def main(args):
         for i, inputFile in enumerate(tqdm(listOfFiles, desc='Skimming')):
             digits = int(math.floor(math.log10(len(listOfFiles)))) + 1
             file_index = f"{i:0{digits}}"
-            outputFileName = os.path.join(args.destination, f"{short_name}_{file_index}.root")
+            outputFileName = os.path.join(args.destination, f"{job_name_int}_{timestamp}_{file_index}.root")
 
             theSkimManager = skimManager()
             theSkimManager.skimAFile(
