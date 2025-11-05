@@ -1,10 +1,14 @@
 {
-    "FatJet Requirement":"nFatJet > 0",
-    "PuppiMET_pt Threshold":"PuppiMET_pt > 50",
-    "MET Filters":"Flag_goodVertices && Flag_globalSuperTightHalo2016Filter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_BadPFMuonFilter && Flag_BadPFMuonDzFilter && Flag_hfNoisyHitsFilter && Flag_eeBadScFilter && Flag_ecalBadCalibFilter",
-    "Good Primary Vertices":"PV_npvsGood > 0",
+    "FatJet Requirement": "nFatJet > 0",
+    "PuppiMET_pt Threshold": "PuppiMET_pt > 120",
+    "Flag_goodVertices": "Flag_goodVertices == 0",
+    "Flag_globalSuperTightHalo2016Filter": "Flag_globalSuperTightHalo2016Filter == 0",
+    "Flag_EcalDeadCellTriggerPrimitiveFilter ": "Flag_EcalDeadCellTriggerPrimitiveFilter  == 0",
+    "Flag_BadPFMuonFilter": "Flag_BadPFMuonFilter == 0",
+    "Flag_BadPFMuonDzFilter": "Flag_BadPFMuonDzFilter == 0",
+    "Flag_hfNoisyHitsFilter": "Flag_hfNoisyHitsFilter == 0",
+    "Flag_eeBadScFilter": "Flag_eeBadScFilter == 0",
+    "Flag_ecalBadCalibFilter": "Flag_ecalBadCalibFilter == 0",
+    "Good Primary Vertices": "(PV_ndof > 4) && (abs(PV_z) < 24) && (sqrt(PV_x*PV_x+PV_y*PV_y) < 2)",
     "Tau requirement": "(nboostedTau > 0) || (nTau > 0)"
-
 }
-
-
