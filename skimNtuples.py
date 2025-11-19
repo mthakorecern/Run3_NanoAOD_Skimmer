@@ -74,8 +74,8 @@ def main(args):
             f'--output-dag-file={dagLocation}/dag',
             f'--output-dir={args.destination}/{job_name}',
             '--opsys=rhel9',
-            '--memory-requirements=5000',
-            '--disk-requirements=10000',
+            '--memory-requirements=3000',
+            '--disk-requirements=15000',
             '--input-dir=/',
             '--extra-inputs=' + ','.join(filter(None, [
                 args.skimCutConfiguration,

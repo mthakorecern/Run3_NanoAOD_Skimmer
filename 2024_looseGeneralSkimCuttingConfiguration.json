@@ -1,6 +1,6 @@
 {
     "FatJet Requirement": "nFatJet > 0",
-    "PuppiMET_pt Threshold": "PuppiMET_pt > 120",
+    "PuppiMET_pt Threshold": "PuppiMET_pt >= 120",
     "Flag_goodVertices": "Flag_goodVertices == 1",
     "Flag_globalSuperTightHalo2016Filter": "Flag_globalSuperTightHalo2016Filter == 1",
     "Flag_EcalDeadCellTriggerPrimitiveFilter": "Flag_EcalDeadCellTriggerPrimitiveFilter  == 1",

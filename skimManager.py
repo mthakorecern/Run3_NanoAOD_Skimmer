@@ -8,7 +8,33 @@ from cutManager import cutManager
 import math
 import sys
 import os
+import time
+
 sys.path.insert(0, os.getcwd())
+def open_root_file_with_retries(fileName, retries=3, wait=15):
+    """Safely open a ROOT file (local or XRootD) with retry and fallback."""
+    for attempt in range(retries):
+        f = ROOT.TFile.Open(fileName)
+        if f and not f.IsZombie():
+            print(f"[OK] Opened file on attempt {attempt+1}: {fileName}")
+            return f
+        print(f"[WARNING] Failed to open {fileName} (attempt {attempt+1}/{retries}). Retrying in {wait}s…")
+        time.sleep(wait)
+
+    # Try redirector swap as last resort
+    if "cms-xrd-global" in fileName:
+        alt = fileName.replace("root://cms-xrd-global.cern.ch//", "root://cmsxcache.hep.wisc.edu//")
+    else:
+        alt = fileName.replace("root://cmsxcache.hep.wisc.edu//", "root://cms-xrd-global.cern.ch//")
+
+    print(f"[INFO] Final attempt using alternate redirector: {alt}")
+    f = ROOT.TFile.Open(alt)
+    if f and not f.IsZombie():
+        print(f"[OK] Opened file via alternate redirector: {alt}")
+        return f
+
+    print(f"[FATAL] Could not open file after {retries+1} attempts: {fileName}")
+    sys.exit(1)  # ensures Condor job terminates properly
 
 class skimManager():
     def __init__(self):
@@ -32,36 +58,36 @@ class skimManager():
                   muonSelection=lambda pt, eta, id: pt > 50 and abs(eta) < 2.4 and id > 0.5,
                   tauSelection=lambda pt, eta: pt > 20 and abs(eta) < 2.3):
 
-        try:
-            theLoadFile = ROOT.TFile(fileName)
-            theInputTree = theLoadFile.Events
-            theRunTree = theLoadFile.Runs
+        
+        theLoadFile = open_root_file_with_retries(fileName)
+        theInputTree = theLoadFile.Events
+        theRunTree = theLoadFile.Runs
             #print("trying to open the file")
 	    #hdfsFileName = fileName.replace('/hdfs','root://cmsxrootd.hep.wisc.edu//')
 
-        except: #we failed to open the file properly, so let's try it the other way
-            try:
-		#print ("Went to Ecept statement")
-                theLoadFile = ROOT.TFile.Open(fileName)
-                theInputTree = theLoadFile.Events
-                theRunTree = theLoadFile.Runs
-            except: #we have failed again to find the file. Let's try to open it this way
-                hdfsFileName = ''
-                if 'cms-xrd-global' in fileName: #we're already tried toopen xrootd style. We're done here
-                    hdfsFileName = fileName.replace('root://cms-xrd-global.cern.ch//','root://cmsxcache.hep.wisc.edu//')
-                else:
-                    hdfsFileName = fileName.replace('root://cmsxcache.hep.wisc.edu//','root://cms-xrd-global.cern.ch//')
-                    print(hdfsFileName)
-                print(hdfsFileName)
-                print("Last attempt to load the file at /hdfs/ with: "+hdfsFileName)
-                try:
-                    theLoadFile = ROOT.TFile.Open(hdfsFileName)
-                    theInputTree = theLoadFile.Events
-                    theRunTree = theLoadFile.Runs
-                except:
-                    print("Failed to load the files properly!")
-                    print("Exiting with code -1")
-                    exit(-1)
+        # except: #we failed to open the file properly, so let's try it the other way
+        #     try:
+		# #print ("Went to Ecept statement")
+        #         theLoadFile = ROOT.TFile.Open(fileName)
+        #         theInputTree = theLoadFile.Events
+        #         theRunTree = theLoadFile.Runs
+        #     except: #we have failed again to find the file. Let's try to open it this way
+        #         hdfsFileName = ''
+        #         if 'cms-xrd-global' in fileName: #we're already tried toopen xrootd style. We're done here
+        #             hdfsFileName = fileName.replace('root://cms-xrd-global.cern.ch//','root://cmsxcache.hep.wisc.edu//')
+        #         else:
+        #             hdfsFileName = fileName.replace('root://cmsxcache.hep.wisc.edu//','root://cms-xrd-global.cern.ch//')
+        #             print(hdfsFileName)
+        #         print(hdfsFileName)
+        #         print("Last attempt to load the file at /hdfs/ with: "+hdfsFileName)
+        #         try:
+        #             theLoadFile = ROOT.TFile.Open(hdfsFileName)
+        #             theInputTree = theLoadFile.Events
+        #             theRunTree = theLoadFile.Runs
+        #         except:
+        #             print("Failed to load the files properly!")
+        #             print("Exiting with code -1")
+        #             exit(-1)
 
         print('Loaded the file, and retrieved the trees...')
         
